@@ -4,7 +4,7 @@ import { DashBoardLayout } from '../../layout/DashBoardLayout';
 
 export const HomePage: React.FC = () => {
   return (
-    <DashBoardLayout overflow={{ vertical: 'scroll' }}>
+    <DashBoardLayout>
       <Lottie
         options={{
           animationData: homePageLottieAnimation,
