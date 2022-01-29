@@ -1,8 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useFirebaseAuth } from '../hooks/useFirebaseAuthentication';
 import { ROUTER_NAMES } from './names';
 
 export const PrivateRoutes: React.FC = () => {
-  const { token } = useAuth();
-  return token ? <Outlet /> : <Navigate to={ROUTER_NAMES.login} replace />;
+  const { user } = useFirebaseAuth();
+
+  return user ? <Outlet /> : <Navigate to={ROUTER_NAMES.login} replace />;
 };

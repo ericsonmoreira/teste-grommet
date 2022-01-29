@@ -6,8 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { CustonField } from '../../components/CustonField';
-import { useSize } from '../../hooks';
-import { useAuth } from '../../hooks/useAuth';
+import { useFirebaseAuth, useSize } from '../../hooks';
 import { BasicLayout } from '../../layout/BasicLayout';
 import { ROUTER_NAMES } from '../../routes/names';
 import schema from './schema';
@@ -17,11 +16,11 @@ interface SignUpPageFormData {
   password: string;
   passwordConfirmation: string;
 }
-
+  
 export const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const { signUp } = useAuth();
+  const { signUp } = useFirebaseAuth();
 
   const size = useSize();
 

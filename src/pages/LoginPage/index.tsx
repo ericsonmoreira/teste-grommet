@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { CustonField } from '../../components/CustonField';
-import { useAuth, useSize } from '../../hooks';
+import { useFirebaseAuth, useSize } from '../../hooks';
 import { BasicLayout } from '../../layout/BasicLayout';
 import { ROUTER_NAMES } from '../../routes/names';
 import schema from './schema';
@@ -19,7 +19,7 @@ interface LoginPageFormData {
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const { autenticate, autenticateWithGithub } = useAuth();
+  const { autenticate, autenticateWithGithub } = useFirebaseAuth();
 
   const size = useSize();
 
@@ -55,7 +55,8 @@ export const LoginPage: React.FC = () => {
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
-      }if (e instanceof Error) {
+      }
+      if (e instanceof Error) {
         toast.error(e.message);
       }
     } finally {

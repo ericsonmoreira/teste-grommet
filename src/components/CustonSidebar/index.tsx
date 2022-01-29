@@ -8,8 +8,7 @@ import {
 } from 'grommet-icons';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useSize } from '../../hooks';
-import { useAuth } from '../../hooks/useAuth';
+import { useFirebaseAuth, useSize } from '../../hooks';
 import { ROUTER_NAMES } from '../../routes/names';
 
 export interface CustonSidebarLink {
@@ -21,7 +20,7 @@ export interface CustonSidebarLink {
 export const CustonSidebar: React.FC = () => {
   const size = useSize();
 
-  const { logout } = useAuth();
+  const { logout } = useFirebaseAuth();
 
   const links: CustonSidebarLink[] = [
     { name: 'home', to: ROUTER_NAMES.home, icon: <Projects /> },

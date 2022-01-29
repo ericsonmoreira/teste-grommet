@@ -1,7 +1,6 @@
 import { Avatar, Box, BoxProps, Button, Heading } from 'grommet';
-import { Notification } from 'grommet-icons';
-import { useSize } from '../../hooks';
-import { useAuth } from '../../hooks/useAuth';
+import { Notification, User } from 'grommet-icons';
+import { useFirebaseAuth, useSize } from '../../hooks';
 
 export interface AppBarProps extends BoxProps {
   onClickRigthButton(): void;
@@ -12,7 +11,7 @@ export const AppBar: React.FC<AppBarProps> = (props) => {
 
   const size = useSize();
 
-  const { avatar } = useAuth();
+  const { user } = useFirebaseAuth();
 
   return (
     <Box
@@ -25,7 +24,14 @@ export const AppBar: React.FC<AppBarProps> = (props) => {
       style={{ zIndex: '1' }}
       {...rest}
     >
-      <Avatar background="dark-2">{avatar}</Avatar>
+      {user?.photoURL ? (
+        <Avatar src={user.photoURL} />
+      ) : (
+        <Avatar background="dark-2">
+          <User />
+        </Avatar>
+      )}
+
       <Heading level="3" margin="none" size={size}>
         Grommet Teste
       </Heading>
