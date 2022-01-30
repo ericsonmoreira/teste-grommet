@@ -1,11 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Spinner } from 'grommet';
+import { Box, Button, FileInput, Spinner } from 'grommet';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { CustonField } from '../../components/CustonField';
 import { useFirebaseAuth, useSize } from '../../hooks';
 import { DashBoardLayout } from '../../layout/DashBoardLayout';
+import { uploadAvatarFile } from '../../services/uploadAvatarFile';
 import schema from './schema';
 
 interface SettingsPageFormData {
@@ -20,6 +21,8 @@ export const SettingsPage: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
   const { control, handleSubmit } = useForm<SettingsPageFormData>({
     defaultValues: {
       displayName: user?.displayName || '',
@@ -31,7 +34,14 @@ export const SettingsPage: React.FC = () => {
   const onSubmit = async ({ displayName, photoURL }: SettingsPageFormData) => {
     try {
       setIsLoading(true);
-      await updateUser(displayName, photoURL);
+
+      if (avatarFile) {
+        const urlFile = await uploadAvatarFile(avatarFile);
+        await updateUser(displayName, urlFile as string);
+        console.log(urlFile);
+      } else {
+        await updateUser(displayName, photoURL);
+      }
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
@@ -57,12 +67,23 @@ export const SettingsPage: React.FC = () => {
             label="Avatar"
             disabled={isLoading}
           />
+          <FileInput
+            name="avatarFile"
+            id="avatarFile"
+            multiple={false}
+            onChange={(e) => {
+              if (e.target.files) {
+                setAvatarFile(e.target.files[0]);
+              } else {
+                setAvatarFile(null);
+              }
+            }}
+          />
           <Button
             label="Salvar"
             type="submit"
             icon={isLoading ? <Spinner size="xsmall" /> : undefined}
             disabled={isLoading}
-            style={{ width: '100%' }}
             margin={{ top: 'medium' }}
             size={size}
           />
