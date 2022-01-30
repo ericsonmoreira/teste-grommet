@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 const fireBaseApp = initializeApp({
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -9,4 +10,6 @@ const fireBaseApp = initializeApp({
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 });
 
-export { fireBaseApp };
+const auth = getAuth(fireBaseApp);
+
+export { fireBaseApp, auth };
