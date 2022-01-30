@@ -66,6 +66,7 @@ export const SettingsPage: React.FC = () => {
             name="avatarFile"
             id="avatarFile"
             setFile={setAvatarFile}
+            disabled={isLoading}
           />
           <Button
             label="Salvar"
