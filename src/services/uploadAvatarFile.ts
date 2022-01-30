@@ -1,10 +1,13 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { storage } from '../firebase';
+import { storage, auth } from '../firebase';
 
 export const uploadAvatarFile = async (file: File | null) => {
   if (!file) return;
 
-  const sotrageRef = ref(storage, `avatars/${file.name}`);
+  const sotrageRef = ref(
+    storage,
+    `avatars/${new Date().getTime()}-${auth.currentUser?.uid}-${file.name}`
+  );
 
   await uploadBytes(sotrageRef, file);
 

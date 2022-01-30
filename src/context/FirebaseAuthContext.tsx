@@ -20,7 +20,7 @@ export interface FirebaseAuthContextState {
   autenticateWithGithub: () => Promise<void>;
   logout: () => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
-  updateUser: (displayName: string, photoURL: string) => Promise<void>;
+  updateUser: (displayName: string, photoURL?: string) => Promise<void>;
 }
 
 export const FirebaseAuthContext = createContext<FirebaseAuthContextState>(
@@ -43,7 +43,7 @@ export const FirebaseAuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const updateUser = useCallback(
-    async (displayName: string, photoURL: string) => {
+    async (displayName: string, photoURL?: string) => {
       if (auth.currentUser) {
         await updateProfile(auth.currentUser, {
           displayName,

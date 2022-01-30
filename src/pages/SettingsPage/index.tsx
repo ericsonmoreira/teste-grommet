@@ -1,9 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, FileInput, Spinner } from 'grommet';
+import { Box, Button, Spinner } from 'grommet';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { CustonField } from '../../components/CustonField';
+import { CustonFileInput } from '../../components/CustonFileInput';
+import { auth } from '../../firebase';
 import { useFirebaseAuth, useSize } from '../../hooks';
 import { DashBoardLayout } from '../../layout/DashBoardLayout';
 import { uploadAvatarFile } from '../../services/uploadAvatarFile';
@@ -11,7 +13,6 @@ import schema from './schema';
 
 interface SettingsPageFormData {
   displayName: string;
-  photoURL: string;
 }
 
 export const SettingsPage: React.FC = () => {
@@ -26,12 +27,11 @@ export const SettingsPage: React.FC = () => {
   const { control, handleSubmit } = useForm<SettingsPageFormData>({
     defaultValues: {
       displayName: user?.displayName || '',
-      photoURL: user?.photoURL || '',
     },
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({ displayName, photoURL }: SettingsPageFormData) => {
+  const onSubmit = async ({ displayName }: SettingsPageFormData) => {
     try {
       setIsLoading(true);
 
@@ -40,7 +40,7 @@ export const SettingsPage: React.FC = () => {
         await updateUser(displayName, urlFile as string);
         console.log(urlFile);
       } else {
-        await updateUser(displayName, photoURL);
+        await updateUser(displayName, auth.currentUser?.photoURL || undefined);
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -61,23 +61,11 @@ export const SettingsPage: React.FC = () => {
             label="Nome"
             disabled={isLoading}
           />
-          <CustonField
-            control={control}
-            name="photoURL"
+          <CustonFileInput
             label="Avatar"
-            disabled={isLoading}
-          />
-          <FileInput
             name="avatarFile"
             id="avatarFile"
-            multiple={false}
-            onChange={(e) => {
-              if (e.target.files) {
-                setAvatarFile(e.target.files[0]);
-              } else {
-                setAvatarFile(null);
-              }
-            }}
+            setFile={setAvatarFile}
           />
           <Button
             label="Salvar"
