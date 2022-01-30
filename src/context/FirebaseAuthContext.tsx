@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
   User,
 } from 'firebase/auth';
 import { createContext, useCallback, useEffect } from 'react';
@@ -19,6 +20,7 @@ export interface FirebaseAuthContextState {
   autenticateWithGithub: () => Promise<void>;
   logout: () => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
+  updateUser: (displayName: string, photoURL: string) => Promise<void>;
 }
 
 export const FirebaseAuthContext = createContext<FirebaseAuthContextState>(
@@ -40,6 +42,19 @@ export const FirebaseAuthProvider: React.FC = ({ children }) => {
     await createUserWithEmailAndPassword(auth, email, password);
   }, []);
 
+  const updateUser = useCallback(
+    async (displayName: string, photoURL: string) => {
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName,
+          photoURL,
+        });
+        setUser(auth.currentUser);
+      }
+    },
+    [setUser]
+  );
+
   const logout = useCallback(async () => {
     await signOut(auth);
   }, []);
@@ -54,7 +69,14 @@ export const FirebaseAuthProvider: React.FC = ({ children }) => {
 
   return (
     <FirebaseAuthContext.Provider
-      value={{ user, autenticate, autenticateWithGithub, signUp, logout }}
+      value={{
+        user,
+        autenticate,
+        autenticateWithGithub,
+        signUp,
+        logout,
+        updateUser,
+      }}
     >
       {children}
     </FirebaseAuthContext.Provider>
